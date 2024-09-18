@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa interactivo con icono personalizado para incendios</title>
+    
+    <!-- Incluye el CSS de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
+    <!-- Incluye el JS de Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <style>
+        /* Asegúrate de darle tamaño al contenedor del mapa */
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor para el mapa -->
+    <div id="map"></div>
+
+    <script>
+        // Inicializa el mapa
+        var map = L.map('map').setView([20, 0], 2); // Coordenadas iniciales
+
+        // Agrega una capa de mapa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Definir el icono personalizado para glaciares
+        var seaLakeIceIcon = L.icon({
+            iconUrl: 'https://cdn.prod.website-files.com/625843c6d847c8dca08551d1/642d4476e3a49459e0408053_zyro-image%20(2)%201.png', // Asegúrate de que esta imagen exista en tu proyecto
+            iconSize: [52, 57], // Tamaño del icono
+            iconAnchor: [16, 37], // Punto de anclaje (en el centro inferior)
+            popupAnchor: [0, -37] // Anclaje del popup (para que aparezca justo encima del icono)
+        });
+        // Definir el icono personalizado para incendios
+        var fireIcon = L.icon({
+            iconUrl: 'https://static.vecteezy.com/system/resources/thumbnails/017/744/774/small_2x/fire-and-flames-design-element-png.png', // Asegúrate de que esta imagen exista en tu proyecto
+            iconSize: [22, 27], // Tamaño del icono
+            iconAnchor: [16, 37], // Punto de anclaje (en el centro inferior)
+            popupAnchor: [0, -37] // Anclaje del popup (para que aparezca justo encima del icono)
+        });
+
+        // Función para agregar un marcador de incendio al mapa con el icono personalizado
+        function addWildfireMarker(coords, title) {
+            L.marker(coords, { icon: fireIcon }).addTo(map)
+                .bindPopup(`<strong>${title}</strong>`);
+        }
+        // Función para agregar un marcador de iceberg al mapa con el icono personalizado
+        function addSeaLakeIce(coords, title) {
+            L.marker(coords, { icon: seaLakeIceIcon }).addTo(map)
+                .bindPopup(`<strong>${title}</strong>`);
+        }
+
+        // Solicitud a la API de EONET para obtener eventos de incendios
+        fetch('https://eonet.gsfc.nasa.gov/api/v3/events')
+            .then(response => response.json())
+            .then(data => {
+                const events = data.events;
+
+                // Filtra los eventos que son incendios forestales (Wildfires)
+                const wildfires = events.filter(event => event.categories.some(category => category.title === "Wildfires"));
+
+                const seaLakeIce = events.filter(event => event.categories.some(category => category.title === "seaLakeIce"));
+
+                // Revisa si hay incendios forestales en la respuesta
+                if (wildfires.length > 0) {
+                    wildfires.forEach(event => {
+                        const coords = event.geometry[0].coordinates;
+                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                        const title = event.title;
+
+                        // Agrega el marcador del incendio al mapa con el icono personalizado
+                        addWildfireMarker(latLng, title);
+                    });
+                } else {
+                    console.log("No se encontraron incendios en los datos de EONET.");
+                }
+
+                // Revisa si hay incendios forestales en la respuesta
+                if (seaLakeIce.length > 0) {
+                    seaLakeIce.forEach(event => {
+                        const coords = event.geometry[0].coordinates;
+                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                        const title = event.title;
+
+                        // Agrega el marcador del incendio al mapa con el icono personalizado
+                        addSeaLakeIce(latLng, title);
+                    });
+                } else {
+                    console.log("No se encontraron incendios en los datos de EONET.");
+                }
+
+            })
+            .catch(error => {
+                console.error('Error al obtener los eventos de EONET:', error);
+            });
+    </script>
+</body>
+</html>
