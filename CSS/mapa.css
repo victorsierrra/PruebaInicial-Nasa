@@ -1,0 +1,14 @@
+p,
+h1{
+  text-align: center;
+}
+
+#map{
+  align-content: center;
+}
+
+svg {
+  display: block;
+  margin: auto;
+  border: 1px solid gray;
+}
