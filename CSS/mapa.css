@@ -12,3 +12,59 @@ svg {
   margin: auto;
   border: 1px solid gray;
 }
+
+        /* Contenedor principal del menú */
+        .menu {
+            width: 250px;
+            background-color: #1b2b36;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        /* Cabecera del menú */
+        .menu-header {
+            background-color: #ff4a4a;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .menu-header i {
+            margin-right: 10px;
+        }
+
+        .menu-header:hover {
+            background-color: #e03a3a;
+        }
+
+        /* Sub-elementos del menú */
+        .menu-items {
+            background-color: #15222b;
+            display: none;
+            flex-direction: column;
+        }
+
+        .menu-item {
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #28333c;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background-color: #1c3a48;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .bullet {
+            font-size: 1.5em;
+            color: white;
+        }

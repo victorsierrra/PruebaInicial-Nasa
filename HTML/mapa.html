@@ -8,6 +8,9 @@
     <!-- Incluye el CSS de Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 
+    <link rel="stylesheet" href="../CSS/mapa.css" />
+
+
     <!-- Incluye el JS de Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
@@ -20,10 +23,45 @@
     </style>
 </head>
 <body>
+
+    <div class="menu">
+        <!-- Cabecera del menú -->
+        <div class="menu-header" onclick="toggleMenu()">
+            <div>
+                <i class="fas fa-rocket"></i> Proyectos
+            </div>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <!-- Sub-elementos del menú -->
+        <div class="menu-items" id="menuItems">
+            <div class="menu-item" id="primero">
+                Sub Elemento #1 <span class="bullet">•</span>
+            </div>
+            <div class="menu-item" id="segundo">
+                Sub Elemento #2 <span class="bullet">•</span>
+            </div>
+            <div class="menu-item" id="tercero">
+                Sub Elemento #3 <span class="bullet">•</span>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Contenedor para el mapa -->
     <div id="map"></div>
 
+
     <script>
+        // Función para desplegar o cerrar el menú
+        function toggleMenu() {
+            var menuItems = document.getElementById("menuItems");
+            if (menuItems.style.display === "none" || menuItems.style.display === "") {
+                menuItems.style.display = "flex";
+            } else {
+                menuItems.style.display = "none";
+            }
+                }
         // Inicializa el mapa
         var map = L.map('map').setView([20, 0], 2); // Coordenadas iniciales
 
@@ -107,19 +145,52 @@
                 // Filtra los eventos que son tormentas severas (Severe Storms)
                 const stormEvents = events.filter(event => event.categories.some(category => category.title === "Severe Storms"));
 
+
+                const botonIncendios = document.getElementById(primero)
+                const botonIcebergs = document.getElementById(segundo)
+                const botonTormentas = document.getElementById(tercero)
+
+
+
+
+
+
+                botonIncendios.addEventListener('click', () => {
+
+                
+                console.log('Buscando incendios')
                 // Revisa si hay incendios forestales en la respuesta
                 if (wildfires.length > 0) {
-                    wildfires.forEach(event => {
-                        const coords = event.geometry[0].coordinates;
-                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                        const title = event.title;
+                wildfires.forEach(event => {
+                    const coords = event.geometry[0].coordinates;
+                    const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                    const title = event.title;
 
-                        // Agrega el marcador del incendio al mapa con el icono personalizado
-                        addWildfireMarker(latLng, title);
-                    });
+                    // Agrega el marcador del incendio al mapa con el icono personalizado
+                    addWildfireMarker(latLng, title);
+                });
                 } else {
-                    console.log("No se encontraron incendios en los datos de EONET.");
+                console.log("No se encontraron incendios en los datos de EONET.");
                 }
+                });
+
+
+                botonIncendios.addEventListener('click', () => {
+                    
+
+                })
+
+
+
+
+
+
+
+
+
+
+
+                /*
 
                 // Revisa si hay eventos de Sea and Lake Ice en la respuesta
                 if (seaLakeIceEvents.length > 0) {
@@ -161,12 +232,15 @@
                     });
                 } else {
                     console.log("No se encontraron eventos de tormentas severas en los datos de EONET.");
-                }
+                }*/
 
             })
             .catch(error => {
                 console.error('Error al obtener los eventos de EONET:', error);
             });
+    </script>
+    <script>
+
     </script>
 </body>
 </html>
