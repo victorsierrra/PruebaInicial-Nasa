@@ -61,7 +61,8 @@
             } else {
                 menuItems.style.display = "none";
             }
-                }
+        }
+        
         // Inicializa el mapa
         var map = L.map('map').setView([20, 0], 2); // Coordenadas iniciales
 
@@ -145,103 +146,59 @@
                 // Filtra los eventos que son tormentas severas (Severe Storms)
                 const stormEvents = events.filter(event => event.categories.some(category => category.title === "Severe Storms"));
 
-
-                const botonIncendios = document.getElementById('primero')
-                const botonIcebergs = document.getElementById(segundo)
-                const botonTormentas = document.getElementById(tercero)
-
-
-
-
-
+                // Corrigiendo selección de botones
+                const botonIncendios = document.getElementById('primero');
+                const botonIcebergs = document.getElementById('segundo');
+                const botonTormentas = document.getElementById('tercero');
 
                 botonIncendios.addEventListener('click', () => {
+                    console.log('Buscando incendios');
+                    if (wildfires.length > 0) {
+                        wildfires.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                            const title = event.title;
 
-                
-                console.log('Buscando incendios')
-                // Revisa si hay incendios forestales en la respuesta
-                if (wildfires.length > 0) {
-                wildfires.forEach(event => {
-                    const coords = event.geometry[0].coordinates;
-                    const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                    const title = event.title;
-
-                    // Agrega el marcador del incendio al mapa con el icono personalizado
-                    addWildfireMarker(latLng, title);
-                });
-                } else {
-                console.log("No se encontraron incendios en los datos de EONET.");
-                }
+                            // Agrega el marcador del incendio al mapa con el icono personalizado
+                            addWildfireMarker(latLng, title);
+                        });
+                    } else {
+                        console.log("No se encontraron incendios en los datos de EONET.");
+                    }
                 });
 
+                // Asegúrate de agregar los otros botones también, por ejemplo:
+                botonIcebergs.addEventListener('click', () => {
+                    console.log('Buscando eventos de Sea and Lake Ice');
+                    if (seaLakeIceEvents.length > 0) {
+                        seaLakeIceEvents.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                            const title = event.title;
+                            addSeaLakeIceMarker(latLng, title);
+                        });
+                    } else {
+                        console.log("No se encontraron eventos de Sea and Lake Ice en los datos de EONET.");
+                    }
+                });
 
-                botonIncendios.addEventListener('click', () => {
-                    
-
-                })
-
-
-
-
-
-
-
-
-
-
-
-                /*
-
-                // Revisa si hay eventos de Sea and Lake Ice en la respuesta
-                if (seaLakeIceEvents.length > 0) {
-                    seaLakeIceEvents.forEach(event => {
-                        const coords = event.geometry[0].coordinates;
-                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                        const title = event.title;
-
-                        // Agrega el marcador del evento de Sea and Lake Ice al mapa con el icono personalizado
-                        addSeaLakeIceMarker(latLng, title);
-                    });
-                } else {
-                    console.log("No se encontraron eventos de Sea and Lake Ice en los datos de EONET.");
-                }
-
-                // Revisa si hay eventos de volcanes en la respuesta
-                if (volcanoEvents.length > 0) {
-                    volcanoEvents.forEach(event => {
-                        const coords = event.geometry[0].coordinates;
-                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                        const title = event.title;
-
-                        // Agrega el marcador del evento de volcán al mapa con el icono personalizado
-                        addVolcanoMarker(latLng, title);
-                    });
-                } else {
-                    console.log("No se encontraron eventos de volcanes en los datos de EONET.");
-                }
-
-                // Revisa si hay eventos de tormentas severas en la respuesta
-                if (stormEvents.length > 0) {
-                    stormEvents.forEach(event => {
-                        const coords = event.geometry[0].coordinates;
-                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                        const title = event.title;
-
-                        // Agrega el marcador del evento de tormenta severa al mapa con el icono personalizado
-                        addStormMarker(latLng, title);
-                    });
-                } else {
-                    console.log("No se encontraron eventos de tormentas severas en los datos de EONET.");
-                }*/
-
+                botonTormentas.addEventListener('click', () => {
+                    console.log('Buscando tormentas severas');
+                    if (stormEvents.length > 0) {
+                        stormEvents.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                            const title = event.title;
+                            addStormMarker(latLng, title);
+                        });
+                    } else {
+                        console.log("No se encontraron tormentas severas en los datos de EONET.");
+                    }
+                });
             })
             .catch(error => {
                 console.error('Error al obtener los eventos de EONET:', error);
             });
     </script>
-    <script>
-
-    </script>
 </body>
 </html>
- 
