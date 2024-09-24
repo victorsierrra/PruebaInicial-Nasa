@@ -13,7 +13,7 @@ svg {
   border: 1px solid gray;
 }
 
-        /* Contenedor principal del menú */
+        
         .menu {
             width: 250px;
             background-color: #1b2b36;
@@ -21,7 +21,7 @@ svg {
             overflow: hidden;
         }
 
-        /* Cabecera del menú */
+        
         .menu-header {
             background-color: #ff4a4a;
             color: white;
@@ -40,7 +40,7 @@ svg {
             background-color: #e03a3a;
         }
 
-        /* Sub-elementos del menú */
+        
         .menu-items {
             background-color: #15222b;
             display: none;
