@@ -29,7 +29,7 @@ h1 {
   /* Contenedor para fecha y eventos */
   .controls-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       padding: 10px;
       background-color: #f4f4f4;
@@ -39,7 +39,6 @@ h1 {
   
   .menu {
       font-family: 'Nasa', sans-serif; 
-      flex-grow: 1;
       width: 250px;
       background-color: #1b2b36;
       border-radius: 5px;
@@ -48,6 +47,7 @@ h1 {
   
   .menu-header {
       background-color: #ff4a4a;
+      width: 230px;
       color: white;
       padding: 15px;
       display: flex;
@@ -66,9 +66,10 @@ h1 {
   
   .menu-items {
       background-color: #15222b;
+      width: 230px;
       display: none;
       flex-direction: column;
-      gap: 5px;
+      
       margin-top: 10px;
   }
   
@@ -106,7 +107,7 @@ h1 {
   }
   
   #filter-events:hover {
-      background-color: #218838;
+      background-color: #e03a3a;
   }
   
   svg {
