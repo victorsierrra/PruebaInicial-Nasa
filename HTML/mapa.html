@@ -3,250 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa interactivo con iconos personalizados para incendios, glaciares, volcanes y tormentas severas</title>
+    <title>Mapa interactivo con rango de fechas</title>
     
     <!-- Incluye el CSS de Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
+    <link href="https://fonts.cdnfonts.com/css/nasa" rel="stylesheet"> 
 
     <link rel="stylesheet" href="../CSS/mapa.css" />
 
     <!-- Incluye el JS de Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
-    <style>
-        /* Asegúrate de darle tamaño al contenedor del mapa */
-        #map {
-            height: 100vh;
-            width: 100%;
-        }
-    </style>
+    
 </head>
 <body>
 
-    <div class="menu">
-        <!-- Cabecera del menú -->
-        <div class="menu-header" onclick="toggleMenu()">
+    <div class="controls-container">
+        <!-- Filtro de fechas -->
+        <div class="date-filter">
             <div>
-                <i class="fas fa-rocket"></i> Proyectos
+                <label for="start-date">Fecha de inicio:</label>
+                <input type="date" id="start-date">
             </div>
-            <i class="fas fa-chevron-down"></i>
+            <div>
+                <label for="end-date">Fecha de fin:</label>
+                <input type="date" id="end-date">
+            </div>
+            <button id="filter-events">Filtrar</button>
         </div>
 
-        <!-- Sub-elementos del menú -->
-        <div class="menu-items" id="menuItems">
-            <div class="menu-item" id="primero">
-                Sub Elemento #1 (Incendios) <span class="bullet">•</span>
+        <!-- Menú de eventos -->
+        <div class="menu">
+            <div class="menu-header" onclick="toggleMenu()">
+                <div>
+                    <i class="fas fa-rocket"></i> Seleccionar Eventos
+                </div>
+                <i class="fas fa-chevron-down"></i>
             </div>
-            <div class="menu-item" id="segundo">
-                Sub Elemento #2 (Icebergs) <span class="bullet">•</span>
-            </div>
-            <div class="menu-item" id="tercero">
-                Sub Elemento #3 (Tormentas) <span class="bullet">•</span>
-            </div>
-            <div class="menu-item" id="cuarto">
-                Sub Elemento #4 (Volcanes) <span class="bullet">•</span>
+            <div class="menu-items" id="menuItems">
+                <div class="menu-item" id="primero">
+                    Incendios <span class="bullet">•</span>
+                </div>
+                <div class="menu-item" id="segundo">
+                    Icebergs <span class="bullet">•</span>
+                </div>
+                <div class="menu-item" id="tercero">
+                    Tormentas <span class="bullet">•</span>
+                </div>
+                <div class="menu-item" id="cuarto">
+                    Volcanes <span class="bullet">•</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Contenedor para el mapa -->
     <div id="map"></div>
-
     <script>
-        // Función para desplegar o cerrar el menú completo
-        function toggleMenu() {
-            var menuItems = document.getElementById("menuItems");
-            if (menuItems.style.display === "none" || menuItems.style.display === "") {
-                menuItems.style.display = "flex";
-            } else {
-                menuItems.style.display = "none";
-            }
+    function toggleMenu() {
+        var menuItems = document.getElementById("menuItems");
+        if (menuItems.style.display === "none" || menuItems.style.display === "") {
+            menuItems.style.display = "flex";
+        } else {
+            menuItems.style.display = "none";
         }
-        
-        // Inicializa el mapa
-        var map = L.map('map').setView([20, 0], 2); // Coordenadas iniciales
+    }
+    
+    // Inicializa el mapa
+    var map = L.map('map').setView([20, 0], 2); // Coordenadas iniciales
 
-        // Agrega una capa de mapa de OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    // Agrega una capa de mapa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-        // Definir el icono personalizado para glaciares
-        var seaLakeIceIcon = L.icon({
-            iconUrl: 'https://cdn.prod.website-files.com/625843c6d847c8dca08551d1/642d4476e3a49459e0408053_zyro-image%20(2)%201.png',
-            iconSize: [52, 57],
-            iconAnchor: [16, 37],
-            popupAnchor: [0, -37]
+    // Definir los iconos personalizados
+    var seaLakeIceIcon = L.icon({
+        iconUrl: 'https://cdn.prod.website-files.com/625843c6d847c8dca08551d1/642d4476e3a49459e0408053_zyro-image%20(2)%201.png',
+        iconSize: [52, 57],
+        iconAnchor: [16, 37],
+        popupAnchor: [0, -37]
+    });
+
+    var fireIcon = L.icon({
+        iconUrl: 'https://static.vecteezy.com/system/resources/thumbnails/017/744/774/small_2x/fire-and-flames-design-element-png.png',
+        iconSize: [22, 27],
+        iconAnchor: [16, 37],
+        popupAnchor: [0, -37]
+    });
+
+    var volcanoIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/1808/1808385.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    });
+
+    var stormIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/252/252035.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    });
+
+    // Arrays para almacenar los marcadores mostrados en el mapa
+    let wildfireMarkers = [];
+    let seaLakeIceMarkers = [];
+    let volcanoMarkers = [];
+    let stormMarkers = [];
+
+    // Función para agregar un marcador de incendio al mapa
+    function addWildfireMarker(coords, title) {
+        const marker = L.marker(coords, { icon: fireIcon }).bindPopup(`<strong>${title}</strong>`);
+        wildfireMarkers.push(marker);
+        marker.addTo(map);
+    }
+
+    // Función para agregar un marcador de glaciares
+    function addSeaLakeIceMarker(coords, title) {
+        const marker = L.marker(coords, { icon: seaLakeIceIcon }).bindPopup(`<strong>${title}</strong>`);
+        seaLakeIceMarkers.push(marker);
+        marker.addTo(map);
+    }
+
+    // Función para agregar un marcador de volcán
+    function addVolcanoMarker(coords, title) {
+        const marker = L.marker(coords, { icon: volcanoIcon }).bindPopup(`<strong>${title}</strong>`);
+        volcanoMarkers.push(marker);
+        marker.addTo(map);
+    }
+
+    // Función para agregar un marcador de tormenta severa
+    function addStormMarker(coords, title) {
+        const marker = L.marker(coords, { icon: stormIcon }).bindPopup(`<strong>${title}</strong>`);
+        stormMarkers.push(marker);
+        marker.addTo(map);
+    }
+
+    // Función para quitar los marcadores del mapa
+    function clearMarkers(markersArray) {
+        markersArray.forEach(marker => map.removeLayer(marker));
+        markersArray.length = 0; // Vacía el array
+    }
+
+    // Función para filtrar eventos por fechas
+    function filterEventsByDate(events, startDate, endDate) {
+        return events.filter(event => {
+            const eventDate = new Date(event.geometry[0].date);
+            return eventDate >= new Date(startDate) && eventDate <= new Date(endDate);
         });
+    }
 
-        // Definir el icono personalizado para incendios
-        var fireIcon = L.icon({
-            iconUrl: 'https://static.vecteezy.com/system/resources/thumbnails/017/744/774/small_2x/fire-and-flames-design-element-png.png',
-            iconSize: [22, 27],
-            iconAnchor: [16, 37],
-            popupAnchor: [0, -37]
-        });
+    // Solicitud a la API de EONET para obtener eventos
+    fetch('https://eonet.gsfc.nasa.gov/api/v3/events')
+        .then(response => response.json())
+        .then(data => {
+            const events = data.events;
 
-        // Definir el icono personalizado para volcanes
-        var volcanoIcon = L.icon({
-            iconUrl: 'https://cdn-icons-png.flaticon.com/512/1808/1808385.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
+            const wildfires = events.filter(event => event.categories.some(category => category.title === "Wildfires"));
+            const seaLakeIceEvents = events.filter(event => event.categories.some(category => category.title === "Sea and Lake Ice"));
+            const volcanoEvents = events.filter(event => event.categories.some(category => category.title === "Volcanoes"));
+            const stormEvents = events.filter(event => event.categories.some(category => category.title === "Severe Storms"));
 
-        // Definir el icono personalizado para tormentas severas
-        var stormIcon = L.icon({
-            iconUrl: 'https://cdn-icons-png.flaticon.com/512/252/252035.png', // URL del icono para tormentas
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
+            // Asignar eventos a los botones y filtrarlos por fechas
+            const botonIncendios = document.getElementById('primero');
+            const botonIcebergs = document.getElementById('segundo');
+            const botonTormentas = document.getElementById('tercero');
+            const botonVolcanes = document.getElementById('cuarto');
+            const filterButton = document.getElementById('filter-events');
 
-        // Arrays para almacenar los marcadores mostrados en el mapa
-        let wildfireMarkers = [];
-        let seaLakeIceMarkers = [];
-        let volcanoMarkers = [];
-        let stormMarkers = [];
+            let startDate = '';
+            let endDate = '';
 
-        // Función para agregar un marcador de incendio al mapa con el icono personalizado
-        function addWildfireMarker(coords, title) {
-            const marker = L.marker(coords, { icon: fireIcon }).bindPopup(`<strong>${title}</strong>`);
-            wildfireMarkers.push(marker);
-            marker.addTo(map);
-        }
+            // Escucha el botón de filtrar
+            filterButton.addEventListener('click', () => {
+                startDate = document.getElementById('start-date').value;
+                endDate = document.getElementById('end-date').value;
 
-        // Función para agregar un marcador de glaciares (Sea and Lake Ice) al mapa con el icono personalizado
-        function addSeaLakeIceMarker(coords, title) {
-            const marker = L.marker(coords, { icon: seaLakeIceIcon }).bindPopup(`<strong>${title}</strong>`);
-            seaLakeIceMarkers.push(marker);
-            marker.addTo(map);
-        }
-
-        // Función para agregar un marcador de volcán al mapa con el icono personalizado
-        function addVolcanoMarker(coords, title) {
-            const marker = L.marker(coords, { icon: volcanoIcon }).bindPopup(`<strong>${title}</strong>`);
-            volcanoMarkers.push(marker);
-            marker.addTo(map);
-        }
-
-        // Función para agregar un marcador de tormenta severa al mapa con el icono personalizado
-        function addStormMarker(coords, title) {
-            const marker = L.marker(coords, { icon: stormIcon }).bindPopup(`<strong>${title}</strong>`);
-            stormMarkers.push(marker);
-            marker.addTo(map);
-        }
-
-        // Función para quitar los marcadores del mapa
-        function clearMarkers(markersArray) {
-            markersArray.forEach(marker => map.removeLayer(marker));
-            markersArray.length = 0; // Vacía el array
-        }
-
-        // Solicitud a la API de EONET para obtener eventos de incendios, glaciares, volcanes y tormentas severas
-        fetch('https://eonet.gsfc.nasa.gov/api/v3/events')
-            .then(response => response.json())
-            .then(data => {
-                const events = data.events;
-
-                // Filtra los eventos que son incendios forestales (Wildfires)
-                const wildfires = events.filter(event => event.categories.some(category => category.title === "Wildfires"));
-
-                // Filtra los eventos que son de tipo Sea and Lake Ice
-                const seaLakeIceEvents = events.filter(event => event.categories.some(category => category.title === "Sea and Lake Ice"));
-
-                // Filtra los eventos que son de tipo volcanes
-                const volcanoEvents = events.filter(event => event.categories.some(category => category.title === "Volcanoes"));
-
-                // Filtra los eventos que son tormentas severas (Severe Storms)
-                const stormEvents = events.filter(event => event.categories.some(category => category.title === "Severe Storms"));
-
-                // Corrigiendo selección de botones
-                const botonIncendios = document.getElementById('primero');
-                const botonIcebergs = document.getElementById('segundo');
-                const botonTormentas = document.getElementById('tercero');
-                const botonVolcanes = document.getElementById('cuarto');
-
-                botonIncendios.addEventListener('click', () => {
-                    if (wildfireMarkers.length === 0) {
-                        console.log('Mostrando incendios');
-                        if (wildfires.length > 0) {
-                            wildfires.forEach(event => {
-                                const coords = event.geometry[0].coordinates;
-                                const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                                const title = event.title;
-                                addWildfireMarker(latLng, title);
-                            });
-                        } else {
-                            console.log("No se encontraron incendios en los datos de EONET.");
-                        }
-                    } else {
-                        console.log('Ocultando incendios');
-                        clearMarkers(wildfireMarkers);
-                    }
-                });
-
-                botonIcebergs.addEventListener('click', () => {
-                    if (seaLakeIceMarkers.length === 0) {
-                        console.log('Mostrando icebergs');
-                        if (seaLakeIceEvents.length > 0) {
-                            seaLakeIceEvents.forEach(event => {
-                                const coords = event.geometry[0].coordinates;
-                                const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                                const title = event.title;
-                                addSeaLakeIceMarker(latLng, title);
-                            });
-                        } else {
-                            console.log("No se encontraron eventos de Sea and Lake Ice en los datos de EONET.");
-                        }
-                    } else {
-                        console.log('Ocultando icebergs');
-                        clearMarkers(seaLakeIceMarkers);
-                    }
-                });
-
-                botonTormentas.addEventListener('click', () => {
-                    if (stormMarkers.length === 0) {
-                        console.log('Mostrando tormentas severas');
-                        if (stormEvents.length > 0) {
-                            stormEvents.forEach(event => {
-                                const coords = event.geometry[0].coordinates;
-                                const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                                const title = event.title;
-                                addStormMarker(latLng, title);
-                            });
-                        } else {
-                            console.log("No se encontraron tormentas severas en los datos de EONET.");
-                        }
-                    } else {
-                        console.log('Ocultando tormentas severas');
-                        clearMarkers(stormMarkers);
-                    }
-                });
-
-                botonVolcanes.addEventListener('click', () => {
-                    if (volcanoMarkers.length === 0) {
-                        console.log('Mostrando volcanes');
-                        if (volcanoEvents.length > 0) {
-                            volcanoEvents.forEach(event => {
-                                const coords = event.geometry[0].coordinates;
-                                const latLng = [coords[1], coords[0]]; // Latitud y longitud
-                                const title = event.title;
-                                addVolcanoMarker(latLng, title);
-                            });
-                        } else {
-                            console.log("No se encontraron volcanes en los datos de EONET.");
-                        }
-                    } else {
-                        console.log('Ocultando volcanes');
-                        clearMarkers(volcanoMarkers);
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error al obtener los eventos de EONET:', error);
+                if (startDate && endDate) {
+                    console.log('Filtrando eventos entre', startDate, 'y', endDate);
+                    clearMarkers(wildfireMarkers);
+                    clearMarkers(seaLakeIceMarkers);
+                    clearMarkers(volcanoMarkers);
+                    clearMarkers(stormMarkers);
+                } else {
+                    console.log('Por favor, selecciona un rango de fechas válido.');
+                }
             });
-    </script>
+
+            botonIncendios.addEventListener('click', () => {
+                if (wildfireMarkers.length === 0 && startDate && endDate) {
+                    console.log('Mostrando incendios filtrados');
+                    const filteredWildfires = filterEventsByDate(wildfires, startDate, endDate);
+                    filteredWildfires.forEach(event => {
+                        const coords = event.geometry[0].coordinates;
+                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                        const title = event.title;
+                        addWildfireMarker(latLng, title);
+                    });
+                } else {
+                    console.log('Ocultando incendios');
+                    clearMarkers(wildfireMarkers);
+                }
+            });
+
+            botonIcebergs.addEventListener('click', () => {
+                if (seaLakeIceMarkers.length === 0 && startDate && endDate) {
+                    console.log('Mostrando icebergs filtrados');
+                    const filteredIcebergs = filterEventsByDate(seaLakeIceEvents, startDate, endDate);
+                    filteredIcebergs.forEach(event => {
+                        const coords = event.geometry[0].coordinates;
+                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                        const title = event.title;
+                        addSeaLakeIceMarker(latLng, title);
+                    });
+                } else {
+                    console.log('Ocultando icebergs');
+                    clearMarkers(seaLakeIceMarkers);
+                }
+            });
+
+            botonTormentas.addEventListener('click', () => {
+                if (stormMarkers.length === 0 && startDate && endDate) {
+                    console.log('Mostrando tormentas severas filtradas');
+                    const filteredStorms = filterEventsByDate(stormEvents, startDate, endDate);
+                    filteredStorms.forEach(event => {
+                        const coords = event.geometry[0].coordinates;
+                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                        const title = event.title;
+                        addStormMarker(latLng, title);
+                    });
+                } else {
+                    console.log('Ocultando tormentas severas');
+                    clearMarkers(stormMarkers);
+                }
+            });
+
+            botonVolcanes.addEventListener('click', () => {
+                if (volcanoMarkers.length === 0 && startDate && endDate) {
+                    console.log('Mostrando volcanes filtrados');
+                    const filteredVolcanoes = filterEventsByDate(volcanoEvents, startDate, endDate);
+                    filteredVolcanoes.forEach(event => {
+                        const coords = event.geometry[0].coordinates;
+                        const latLng = [coords[1], coords[0]]; // Latitud y longitud
+                        const title = event.title;
+                        addVolcanoMarker(latLng, title);
+                    });
+                } else {
+                    console.log('Ocultando volcanes');
+                    clearMarkers(volcanoMarkers);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener los eventos de EONET:', error);
+        });
+</script>
 </body>
 </html>

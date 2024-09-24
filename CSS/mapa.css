@@ -1,70 +1,117 @@
-p,
-h1{
-  text-align: center;
-}
+@import url('https://fonts.cdnfonts.com/css/nasa');
+h1 {
+    text-align: center;
+    font-family: 'Nasa', sans-serif; 
+  }
+  
+  #map {
+      height: 70vh;
+      width: 100%;
+  }
+  
+  .date-filter {
+      font-family: 'Nasa', sans-serif; 
+      margin: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  
+  .date-filter label {
+      font-size: 14px;
+  }
 
-#map{
-  align-content: center;
-}
+  input{
+    font-family: 'Nasa', sans-serif; 
+    margin-right: 10px;
+  }
+  
+  /* Contenedor para fecha y eventos */
+  .controls-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: #f4f4f4;
+      border-radius: 8px;
+      margin-bottom: 20px;
+  }
+  
+  .menu {
+      font-family: 'Nasa', sans-serif; 
+      flex-grow: 1;
+      width: 250px;
+      background-color: #1b2b36;
+      border-radius: 5px;
+      overflow: hidden;
+  }
+  
+  .menu-header {
+      background-color: #ff4a4a;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+  }
+  
+  .menu-header i {
+      margin-right: 10px;
+  }
+  
+  .menu-header:hover {
+      background-color: #e03a3a;
+  }
+  
+  .menu-items {
+      background-color: #15222b;
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 10px;
+  }
+  
+  .menu-item {
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #28333c;
+      cursor: pointer;
+  }
+  
+  .menu-item:hover {
+      background-color: #1c3a48;
+  }
+  
+  .menu-item:last-child {
+      border-bottom: none;
+  }
+  
+  .bullet {
+      font-size: 1.5em;
+      color: white;
+  }
 
-svg {
-  display: block;
-  margin: auto;
-  border: 1px solid gray;
-}
-
-        
-        .menu {
-            width: 250px;
-            background-color: #1b2b36;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        
-        .menu-header {
-            background-color: #ff4a4a;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .menu-header i {
-            margin-right: 10px;
-        }
-
-        .menu-header:hover {
-            background-color: #e03a3a;
-        }
-
-        
-        .menu-items {
-            background-color: #15222b;
-            display: none;
-            flex-direction: column;
-        }
-
-        .menu-item {
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #28333c;
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            background-color: #1c3a48;
-        }
-
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .bullet {
-            font-size: 1.5em;
-            color: white;
-        }
+  #filter-events {
+      font-family: 'Nasa', sans-serif; 
+      background-color: #ff4a4a;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+  }
+  
+  #filter-events:hover {
+      background-color: #218838;
+  }
+  
+  svg {
+    display: block;
+    margin: auto;
+    border: 1px solid gray;
+  }
+  
