@@ -61,7 +61,7 @@ h1 {
   .menu-header {
       background-color: #ff4a4a;
       width: 230px;
-      color: white;
+      color: rgb(0, 0, 0);
       padding: 15px;
       display: flex;
       justify-content: space-between;
