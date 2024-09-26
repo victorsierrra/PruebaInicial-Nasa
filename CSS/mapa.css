@@ -59,9 +59,9 @@ h1 {
   }
   
   .menu-header {
-      background-color: #ff4a4a;
+      background-color: #ffffff;
       width: 230px;
-      color: white;
+      color: rgb(0, 0, 0);
       padding: 15px;
       display: flex;
       justify-content: space-between;
@@ -71,10 +71,6 @@ h1 {
   
   .menu-header i {
       margin-right: 10px;
-  }
-  
-  .menu-header:hover {
-      background-color: #e03a3a;
   }
   
   .menu-items {
@@ -109,18 +105,19 @@ h1 {
   }
 
   #filter-events {
-      font-family: 'Nasa', sans-serif; 
-      background-color: #ff4a4a;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
+    font-family: 'Nasa', sans-serif; 
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 15px 30px; 
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1.5rem; 
   }
   
   #filter-events:hover {
-      background-color: #e03a3a;
+      background-color: #C70039; 
   }
   
   svg {
@@ -129,43 +126,3 @@ h1 {
     border: 1px solid gray;
   }
   
-  footer {
-    background-color: #000000;
-    padding: 30px 0;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    position: relative;
-}
-
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.footer-logo img {
-    height: 60px;
-    margin-bottom: 20px;
-}
-
-.footer-links {
-    margin-bottom: 15px;
-}
-
-.footer-links a {
-    color: #FFFFFF;
-    margin: 0 10px;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-}
-
-footer p {
-    font-size: 0.8rem;
-    margin-top: 10px;
-    color: #dcdcdc;
-}

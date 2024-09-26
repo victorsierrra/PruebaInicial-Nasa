@@ -35,15 +35,16 @@ button {
     font-size: 1.2rem;
     cursor: pointer;
 }
+button:hover {
+    background-color: #C70039; 
+}
 
 footer {
-    background-color: #000000;
-    padding: 30px 0;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    position: relative;
+    position: absolute; 
+    background: linear-gradient(transparent, #000000);
     bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .footer-content {

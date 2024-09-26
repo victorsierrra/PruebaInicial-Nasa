@@ -9,8 +9,8 @@
 html, body {
     height: 100%;
     font-family: 'Nasa', sans-serif;
-    background-color: #0B3D91; 
-    background-image: url('/img/CA.PNG');
+    background-color: #001F3F; 
+    background-image: url('/img/CA.PNG'); 
     background-size: cover;
     color: #FFFFFF;
     text-align: center;
@@ -28,6 +28,8 @@ main {
 
 header {
     padding: 80px;
+    background-color: rgba(0, 0, 0, 0.7); 
+    border-radius: 10px;
 }
 
 header img {
@@ -38,25 +40,27 @@ table {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px; 
+    overflow: hidden; 
 }
 
 th, td {
     padding: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.5); 
     text-align: center;
 }
 
 tr.leve {
-    background-color: #e0f7fa;
+    background-color: rgba(224, 247, 250, 0.3); 
 }
 
 tr.moderado {
-    background-color: #ffe082;
+    background-color: rgba(255, 224, 178, 0.3); 
 }
 
 tr.grave {
-    background-color: #ff8a80;
+    background-color: rgba(255, 138, 128, 0.3); 
 }
 
 .Boton {
@@ -67,21 +71,25 @@ button {
     font-family: 'Nasa', sans-serif;                                           
     background-color: #ff0000; 
     color: #FFFFFF;
+    align-items: center;
     border: none;
     padding: 10px 20px;
+    border-radius: 5px;
     font-size: 1.2rem;
     cursor: pointer;
 }
 
-
-footer {
-    background-color: #000000;
-    padding: 30px 0;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    position: relative;
+button:hover {
+    background-color: #C70039; 
 }
+footer {
+    position: absolute;
+    background: linear-gradient(transparent, #000000);
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 
 .footer-content {
     display: flex;
