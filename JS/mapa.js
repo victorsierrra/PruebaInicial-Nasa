@@ -221,3 +221,20 @@ fetch('https://eonet.gsfc.nasa.gov/api/v3/events')
     .catch(error => {
         console.error('Error al obtener los eventos de EONET:', error);
     });
+
+    map.on('click', function(coordenada) {
+        const latLng = coordenada.latlng; // Obtener latitud y longitud
+        const query = `${latLng.lat},${latLng.lng}`;
+    
+        // Llamada a la API de clima - Tarda en darla pero funciona
+        fetch(`http://api.weatherapi.com/v1/current.json?key=26c2cf8940064008805152052242509&q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                const weatherInfo = `Temperatura: ${data.current.temp_c}°C`;
+                L.popup()
+                    .setLatLng(latLng)
+                    .setContent(`<strong>${weatherInfo}</strong>`)
+                    .openOn(map);
+            })
+            .catch(error => console.error('Error al obtener el clima:', error));
+    });
