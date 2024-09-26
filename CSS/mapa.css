@@ -1,110 +1,109 @@
 @import url('https://fonts.cdnfonts.com/css/nasa');
 body {
     font-family: 'Nasa', sans-serif;                                          
-    background-color: #0B3D91; 
-    background-image: url('/img/CA.PNG');
+    background-color: #000000; 
     background-size: cover;
 }
 h1 {
     text-align: center;
     font-family: 'Nasa', sans-serif; 
-    
-  }
-  img {
+}
+img {
     height: 100px;
     margin-right: 80px;
     cursor: pointer;
-  }
+}
   
-  #map {
-      height: 70vh;
-      width: 100%;
-  }
+#map {
+    height: 70vh;
+    width: 100%;
+}
   
-  .date-filter {
-      font-family: 'Nasa', sans-serif; 
-      margin: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-  }
+.date-filter {
+    font-family: 'Nasa', sans-serif; 
+    margin: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
   
-  .date-filter label {
-      font-size: 14px;
-      color: white;
-  }
+.date-filter label {
+    font-size: 14px;
+    color: white;
+}
 
-  input{
+input {
     font-family: 'Nasa', sans-serif; 
     margin-right: 10px;
-  }
-  
-  /* Contenedor para fecha y eventos */
-  .controls-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-      background-color: #000000;
-      border-radius: 8px;
-      margin-bottom: 20px;
-  }
-  
-  .menu {
-      font-family: 'Nasa', sans-serif; 
-      width: 230px;
-      background-color: #000000;
-      border-radius: 5px;
-      overflow: hidden;
-  }
-  
-  .menu-header {
-      background-color: #ffffff;
-      width: 230px;
-      color: rgb(0, 0, 0);
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-  }
-  
-  .menu-header i {
-      margin-right: 10px;
-  }
-  
-  .menu-items {
-      background-color: #000000;
-      width: 230px;
-      display: none;
-      flex-direction: column;
-      text-align: center;
-  }
-  
-  .menu-item {
-      color: white;
-      text-align: center;
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      border-bottom: 1px solid #e03a3a;
-      cursor: pointer;
-  }
-  
-  .menu-item:hover {
-      background-color: #1c3a48;
-  }
-  
-  .menu-item:last-child {
-      border-bottom: none;
-  }
-  
-  .bullet {
-      font-size: 1.5em;
-      color: white;
-  }
+}
 
-  #filter-events {
+/* Contenedor para fecha y eventos */
+.controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Menú de eventos */
+.menu {
+    font-family: 'Nasa', sans-serif; 
+    width: 230px;
+    background-color: #000000;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.menu-header {
+    background-color: #ffffff;
+    width: 230px;
+    color: rgb(0, 0, 0);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.menu-header i {
+    margin-right: 10px;
+}
+
+.menu-items {
+    background-color: #000000;
+    width: 230px;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+}
+
+.menu-item {
+    color: white;
+    text-align: center;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #e03a3a;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background-color: #1c3a48;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.bullet {
+    font-size: 1.5em;
+    color: white;
+}
+
+#filter-events {
     font-family: 'Nasa', sans-serif; 
     background-color: #ff0000;
     color: white;
@@ -114,15 +113,38 @@ h1 {
     cursor: pointer;
     margin-left: 10px;
     font-size: 1.5rem; 
-  }
+}
   
-  #filter-events:hover {
-      background-color: #C70039; 
-  }
-  
-  svg {
+#filter-events:hover {
+    background-color: #C70039; 
+}
+
+svg {
     display: block;
     margin: auto;
     border: 1px solid gray;
-  }
-  
+}
+
+/* Menú de Capas Base */
+.base-layer-menu {
+    font-family: 'Nasa', sans-serif; 
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.base-layer-menu button {
+    background-color: #ff0000;
+    color: white;
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 1.5rem; 
+}
+
+.base-layer-menu button:hover {
+    background-color: #C70039;
+}

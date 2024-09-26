@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa interactivo con rango de fechas</title>
+    <title>Mapa interactivo con capas base y rango de fechas</title>
     
-    <!-- Incluye el CSS de Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <!-- Incluye el CSS de Cesium -->
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.89/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     
+    <!-- Fuente NASA -->
     <link href="https://fonts.cdnfonts.com/css/nasa" rel="stylesheet"> 
     <link rel="stylesheet" href="../CSS/mapa.css" />
 
-    <!-- Incluye el JS de Leaflet -->
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- Incluye el JS de Cesium -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.89/Build/Cesium/Cesium.js"></script>
     
 </head>
 <body>
-
 
     <div class="controls-container">
         <!-- Filtro de fechas -->
@@ -33,6 +33,13 @@
                 <input type="date" id="end-date">
             </div>
             <button id="filter-events">Filtrar</button>
+        </div>
+
+        <!-- Menú de capas base -->
+        <div class="base-layer-menu">
+            <button id="osmLayer">OpenStreetMap</button>
+            <button id="topoLayer">OpenTopoMap</button>
+            <button id="esriLayer">ESRI World Imagery</button>
         </div>
 
         <!-- Menú de eventos -->
@@ -60,8 +67,206 @@
         </div>
     </div>
 
-   
-    <div id="map"></div>
-    <script src="../JS/mapa.js"></script>
+    <div id="map" style="width: 100%; height: 100vh;"></div>
+
+    <script>
+        console.log('Conectado');
+
+        // Inicializar CesiumJS
+        var viewer = new Cesium.Viewer('map', {
+            imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+                url: 'https://a.tile.openstreetmap.org/'
+            }),
+            baseLayerPicker: false, // Desactiva la selección de capas base
+            geocoder: false,        // Desactiva el geocoder
+        });
+
+        // Cambiar la vista inicial
+        viewer.camera.setView({
+            destination: Cesium.Cartesian3.fromDegrees(0.0, 20.0, 5000000) // Centro del mapa
+        });
+
+        // Función para alternar el menú
+        function toggleMenu() {
+            var menuItems = document.getElementById("menuItems");
+            if (menuItems.style.display === "none" || menuItems.style.display === "") {
+                menuItems.style.display = "flex";
+            } else {
+                menuItems.style.display = "none";
+            }
+        }
+
+        // Controlar el cambio de capas base
+        var imageryLayers = viewer.imageryLayers;
+
+        document.getElementById('osmLayer').addEventListener('click', function () {
+            console.log('Cambiando a OpenStreetMap');
+            imageryLayers.removeAll(); // Quitar todas las capas actuales
+            imageryLayers.addImageryProvider(new Cesium.OpenStreetMapImageryProvider({
+                url: 'https://a.tile.openstreetmap.org/'
+            }));
+        });
+
+        document.getElementById('topoLayer').addEventListener('click', function () {
+            console.log('Cambiando a OpenTopoMap');
+            imageryLayers.removeAll(); // Quitar todas las capas actuales
+            imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({
+                url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c'],
+                credit: new Cesium.Credit('OpenTopoMap')
+            }));
+        });
+
+        document.getElementById('esriLayer').addEventListener('click', function () {
+            console.log('Cambiando a ESRI World Imagery');
+            imageryLayers.removeAll(); // Quitar todas las capas actuales
+            imageryLayers.addImageryProvider(new Cesium.ArcGisMapServerImageryProvider({
+                url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+            }));
+        });
+
+        // Función para agregar marcadores
+        function addMarker(coords, title, iconUrl) {
+            var entity = viewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(coords[0], coords[1]),
+                billboard: {
+                    image: iconUrl,
+                    width: 32,
+                    height: 32
+                },
+                label: {
+                    text: title,
+                    font: '14pt sans-serif',
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+                }
+            });
+            return entity;
+        }
+
+        // Arrays para almacenar los marcadores mostrados en el mapa
+        let wildfireMarkers = [];
+        let seaLakeIceMarkers = [];
+        let volcanoMarkers = [];
+        let stormMarkers = [];
+
+        // Función para quitar los marcadores del mapa
+        function clearMarkers(markersArray) {
+            markersArray.forEach(marker => viewer.entities.remove(marker));
+            markersArray.length = 0;
+        }
+
+        // Función para filtrar eventos por fechas
+        function filterEventsByDate(events, startDate, endDate) {
+            return events.filter(event => {
+                const eventDate = new Date(event.geometry[0].date);
+                return eventDate >= new Date(startDate) && eventDate <= new Date(endDate);
+            });
+        }
+
+        // Solicitud a la API de EONET para obtener eventos
+        fetch('https://eonet.gsfc.nasa.gov/api/v3/events')
+            .then(response => response.json())
+            .then(data => {
+                const events = data.events;
+
+                const wildfires = events.filter(event => event.categories.some(category => category.title === "Wildfires"));
+                const seaLakeIceEvents = events.filter(event => event.categories.some(category => category.title === "Sea and Lake Ice"));
+                const volcanoEvents = events.filter(event => event.categories.some(category => category.title === "Volcanoes"));
+                const stormEvents = events.filter(event => event.categories.some(category => category.title === "Severe Storms"));
+
+                const botonIncendios = document.getElementById('primero');
+                const botonIcebergs = document.getElementById('segundo');
+                const botonTormentas = document.getElementById('tercero');
+                const botonVolcanes = document.getElementById('cuarto');
+                const filterButton = document.getElementById('filter-events');
+
+                let startDate = '';
+                let endDate = '';
+
+                // Escucha el botón de filtrar
+                filterButton.addEventListener('click', () => {
+                    startDate = document.getElementById('start-date').value;
+                    endDate = document.getElementById('end-date').value;
+
+                    if (startDate && endDate) {
+                        console.log('Filtrando eventos entre', startDate, 'y', endDate);
+                        clearMarkers(wildfireMarkers);
+                        clearMarkers(seaLakeIceMarkers);
+                        clearMarkers(volcanoMarkers);
+                        clearMarkers(stormMarkers);
+                    } else {
+                        console.log('Por favor, selecciona un rango de fechas válido.');
+                    }
+                });
+
+                botonIncendios.addEventListener('click', () => {
+                    if (wildfireMarkers.length === 0 && startDate && endDate) {
+                        console.log('Mostrando incendios filtrados');
+                        const filteredWildfires = filterEventsByDate(wildfires, startDate, endDate);
+                        filteredWildfires.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[0], coords[1]]; // Longitud y latitud
+                            const title = event.title;
+                            const marker = addMarker(latLng, title, 'https://static.vecteezy.com/system/resources/thumbnails/017/744/774/small_2x/fire-and-flames-design-element-png.png');
+                            wildfireMarkers.push(marker);
+                        });
+                    } else {
+                        console.log('Ocultando incendios');
+                        clearMarkers(wildfireMarkers);
+                    }
+                });
+
+                botonIcebergs.addEventListener('click', () => {
+                    if (seaLakeIceMarkers.length === 0 && startDate && endDate) {
+                        console.log('Mostrando icebergs filtrados');
+                        const filteredIcebergs = filterEventsByDate(seaLakeIceEvents, startDate, endDate);
+                        filteredIcebergs.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[0], coords[1]];
+                            const title = event.title;
+                            const marker = addMarker(latLng, title, 'https://cdn-icons-png.flaticon.com/512/3236/3236864.png');
+                            seaLakeIceMarkers.push(marker);
+                        });
+                    } else {
+                        console.log('Ocultando icebergs');
+                        clearMarkers(seaLakeIceMarkers);
+                    }
+                });
+
+                botonTormentas.addEventListener('click', () => {
+                    if (stormMarkers.length === 0 && startDate && endDate) {
+                        console.log('Mostrando tormentas filtradas');
+                        const filteredStorms = filterEventsByDate(stormEvents, startDate, endDate);
+                        filteredStorms.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[0], coords[1]];
+                            const title = event.title;
+                            const marker = addMarker(latLng, title, 'https://cdn-icons-png.flaticon.com/512/3236/3236904.png');
+                            stormMarkers.push(marker);
+                        });
+                    } else {
+                        console.log('Ocultando tormentas');
+                        clearMarkers(stormMarkers);
+                    }
+                });
+
+                botonVolcanes.addEventListener('click', () => {
+                    if (volcanoMarkers.length === 0 && startDate && endDate) {
+                        console.log('Mostrando volcanes filtrados');
+                        const filteredVolcanoes = filterEventsByDate(volcanoEvents, startDate, endDate);
+                        filteredVolcanoes.forEach(event => {
+                            const coords = event.geometry[0].coordinates;
+                            const latLng = [coords[0], coords[1]];
+                            const title = event.title;
+                            const marker = addMarker(latLng, title, 'https://cdn-icons-png.flaticon.com/512/4089/4089383.png');
+                            volcanoMarkers.push(marker);
+                        });
+                    } else {
+                        console.log('Ocultando volcanes');
+                        clearMarkers(volcanoMarkers);
+                    }
+                });
+            });
+    </script>
 </body>
 </html>
